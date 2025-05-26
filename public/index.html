@@ -1,1 +1,59 @@
-
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#4F46E5" />
+    <meta name="description" content="ReVive Outreach Analytics Dashboard - Comprehensive insights from street outreach activities across Chicago" />
+    <meta name="keywords" content="outreach, analytics, dashboard, homeless services, Chicago, ReVive Impact" />
+    <meta name="author" content="ReVive Impact" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="ReVive Outreach Analytics Dashboard" />
+    <meta property="og:description" content="Comprehensive insights from street outreach activities across Chicago" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="%PUBLIC_URL%" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ReVive Outreach Analytics Dashboard" />
+    <meta name="twitter:description" content="Comprehensive insights from street outreach activities across Chicago" />
+    
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Tailwind Configuration -->
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              revive: {
+                primary: '#4F46E5',
+                secondary: '#3B82F6',
+                success: '#10B981',
+                warning: '#F59E0B',
+                danger: '#EF4444'
+              }
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.5s ease-in-out',
+              'slide-up': 'slideUp 0.5s ease-out',
+              'pulse-slow': 'pulse 3s infinite'
+            }
+          }
+        }
+      }
+    </script>
+    
+    <title>ReVive Outreach Analytics Dashboard</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
