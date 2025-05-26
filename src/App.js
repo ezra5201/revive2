@@ -319,4 +319,173 @@ function App() {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {topLocations.map((location, index) => (
-                      <tr key={index} className="hover
+                      <tr key={index} className="hover:bg-gray-50 transition-colors duration-200">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {location.location}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {location.visits}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {location.totalClients}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {location.totalEngaged}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <div className="flex items-center">
+                            <div className="flex-1 bg-gray-200 rounded-full h-2 mr-2 max-w-20">
+                              <div
+                                className="bg-indigo-600 h-2 rounded-full transition-all duration-500"
+                                style={{ width: `${Math.min(location.engagementRate, 100)}%` }}
+                              ></div>
+                            </div>
+                            <span className="text-xs font-medium">
+                              {location.engagementRate.toFixed(1)}%
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Trends Tab */}
+        {selectedView === 'trends' && (
+          <div className="space-y-8">
+            {/* Monthly Trends Chart */}
+            <div className="bg-white p-6 rounded-xl shadow-lg animate-slide-up">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <TrendingUp className="h-5 w-5 mr-2 text-green-600" />
+                Monthly Outreach Trends (Aug - Dec 2024)
+              </h3>
+              <ResponsiveContainer width="100%" height={400}>
+                <ComposedChart data={monthlyTrends}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis dataKey="month" stroke="#6b7280" />
+                  <YAxis yAxisId="left" stroke="#6b7280" />
+                  <YAxis yAxisId="right" orientation="right" stroke="#6b7280" />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend />
+                  <Bar yAxisId="left" dataKey="visits" fill="#3B82F6" name="Monthly Visits" radius={[2, 2, 0, 0]} />
+                  <Bar yAxisId="left" dataKey="totalClients" fill="#10B981" name="Clients Encountered" radius={[2, 2, 0, 0]} />
+                  <Line yAxisId="right" type="monotone" dataKey="engagementRate" stroke="#EF4444" strokeWidth={3} name="Engagement Rate %" />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
+
+            {/* Monthly Breakdown Table */}
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden animate-slide-up" style={{ animationDelay: '200ms' }}>
+              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h3 className="text-lg font-semibold text-gray-900">Monthly Performance Breakdown</h3>
+                <p className="text-sm text-gray-600 mt-1">Detailed monthly statistics and performance indicators</p>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Month</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Visits</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Clients</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Engaged</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Engagement Rate</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Shelter Requests</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {monthlyTrends.map((month, index) => (
+                      <tr key={index} className="hover:bg-gray-50 transition-colors duration-200">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          {month.month}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {month.visits}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {month.totalClients}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {month.totalEngaged}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            month.engagementRate >= 80 ? 'bg-green-100 text-green-800' :
+                            month.engagementRate >= 60 ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
+                          }`}>
+                            {month.engagementRate.toFixed(1)}%
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                            {month.shelterRequests}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Insights Box */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200 animate-slide-up" style={{ animationDelay: '400ms' }}>
+              <h3 className="text-lg font-semibold text-blue-900 mb-3 flex items-center">
+                <Award className="h-5 w-5 mr-2" />
+                Key Insights & Recommendations
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                <div className="space-y-3">
+                  <div>
+                    <h4 className="font-medium text-blue-800 flex items-center">
+                      <TrendingUp className="h-4 w-4 mr-1" />
+                      Growth Trends
+                    </h4>
+                    <p className="text-blue-700">December showed the highest activity with 123 visits and 837 clients encountered, indicating increased need during winter months.</p>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-blue-800 flex items-center">
+                      <Target className="h-4 w-4 mr-1" />
+                      Consistency
+                    </h4>
+                    <p className="text-blue-700">Engagement rate remains stable at ~73% across all months, indicating effective and reliable outreach methods.</p>
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <div>
+                    <h4 className="font-medium text-blue-800 flex items-center">
+                      <MapPin className="h-4 w-4 mr-1" />
+                      High-Impact Locations
+                    </h4>
+                    <p className="text-blue-700">Top 10 locations account for 60% of all client encounters. Focus resources on Hubbard & Desplaines and Chicago & Albany for maximum impact.</p>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-blue-800 flex items-center">
+                      <Users className="h-4 w-4 mr-1" />
+                      Coverage Excellence
+                    </h4>
+                    <p className="text-blue-700">232 unique locations demonstrate comprehensive citywide outreach, ensuring no vulnerable population is overlooked.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="mt-12 text-center text-gray-500 text-sm animate-fade-in" style={{ animationDelay: '600ms' }}>
+          <p>ReVive Impact Dashboard • Data from {totalStats.uniqueLocations} unique locations • Generated {new Date().toLocaleDateString()}</p>
+          <p className="mt-1">Comprehensive analytics for street outreach optimization and impact measurement</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
