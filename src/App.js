@@ -92,8 +92,6 @@ function App() {
     { name: 'Low Engagement (<50%)', value: topLocations.filter(l => l.engagementRate < 50).length, color: '#EF4444' }
   ];
 
-  const colors = ['#3B82F6', '#10B981', '#8B5CF6', '#F59E0B', '#EF4444', '#06B6D4', '#84CC16', '#F97316'];
-
   // Custom tooltip for charts
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
