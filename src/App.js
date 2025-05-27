@@ -13,7 +13,7 @@ function App() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Data from your outreach analysis
+  // Sample data based on the outreach analysis
   const totalStats = {
     totalVisits: 447,
     totalClients: 3051,
@@ -49,7 +49,7 @@ function App() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="text-center animate-fade-in">
+        <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-indigo-600 mx-auto mb-4"></div>
           <h2 className="text-xl font-semibold text-gray-700 mb-2">Loading Dashboard...</h2>
           <p className="text-gray-500">Analyzing outreach data</p>
@@ -58,26 +58,21 @@ function App() {
     );
   }
 
-  // Metric Card Component
-  const MetricCard = ({ icon: Icon, title, value, subtitle, color = "blue", delay = 0 }) => (
-    <div 
-      className={`bg-white p-6 rounded-xl shadow-lg border-l-4 border-${color}-500 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 animate-slide-up`}
-      style={{ animationDelay: `${delay}ms` }}
-    >
+  // Key metrics cards
+  const MetricCard = ({ icon: Icon, title, value, subtitle, color = "blue" }) => (
+    <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-blue-500 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-gray-600 text-sm font-medium">{title}</p>
-          <p className="text-3xl font-bold text-gray-900 mb-1">{value}</p>
-          {subtitle && <p className="text-gray-500 text-sm">{subtitle}</p>}
+          <p className="text-3xl font-bold text-gray-900">{value}</p>
+          {subtitle && <p className="text-gray-500 text-sm mt-1">{subtitle}</p>}
         </div>
-        <div className={`p-3 bg-${color}-100 rounded-full`}>
-          <Icon className={`h-8 w-8 text-${color}-600`} />
-        </div>
+        <Icon className="h-8 w-8 text-blue-500" />
       </div>
     </div>
   );
 
-  // Chart data preparations
+  // Top locations chart data
   const topLocationsChart = topLocations.slice(0, 8).map(loc => ({
     name: loc.location.length > 20 ? loc.location.substring(0, 20) + '...' : loc.location,
     visits: loc.visits,
@@ -86,52 +81,28 @@ function App() {
     engagementRate: loc.engagementRate.toFixed(1)
   }));
 
+  // Engagement rate distribution
   const engagementDistribution = [
-    { name: 'High Engagement (80%+)', value: topLocations.filter(l => l.engagementRate >= 80).length, color: '#10B981' },
-    { name: 'Medium Engagement (50-79%)', value: topLocations.filter(l => l.engagementRate >= 50 && l.engagementRate < 80).length, color: '#F59E0B' },
-    { name: 'Low Engagement (<50%)', value: topLocations.filter(l => l.engagementRate < 50).length, color: '#EF4444' }
+    { name: 'High Engagement (80%+)', value: 3, color: '#10B981' },
+    { name: 'Medium Engagement (50-79%)', value: 6, color: '#F59E0B' },
+    { name: 'Low Engagement (<50%)', value: 1, color: '#EF4444' }
   ];
-
-  // Custom tooltip for charts
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-          <p className="font-medium text-gray-900">{label}</p>
-          {payload.map((entry, index) => (
-            <p key={index} style={{ color: entry.color }} className="text-sm">
-              {entry.name}: {entry.value}
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <div className="bg-white shadow-sm border-b animate-fade-in">
+      <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-3xl font-bold gradient-text">ReVive Outreach Analytics Dashboard</h1>
-                <p className="text-gray-600 mt-2">Comprehensive insights from street outreach activities across Chicago</p>
-              </div>
-              <div className="hidden md:flex items-center space-x-2 text-sm text-gray-500">
-                <Calendar className="h-4 w-4" />
-                <span>Last updated: {new Date().toLocaleDateString()}</span>
-              </div>
-            </div>
+            <h1 className="text-3xl font-bold text-gray-900">ReVive Outreach Analytics Dashboard</h1>
+            <p className="text-gray-600 mt-2">Comprehensive insights from street outreach activities across Chicago</p>
           </div>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Navigation */}
-        <div className="flex space-x-1 bg-white rounded-lg p-1 mb-8 shadow-sm animate-slide-up">
+        <div className="flex space-x-1 bg-white rounded-lg p-1 mb-8 shadow-sm">
           {[
             { id: 'overview', label: 'Overview', icon: Activity },
             { id: 'locations', label: 'Locations', icon: MapPin },
@@ -140,9 +111,9 @@ function App() {
             <button
               key={id}
               onClick={() => setSelectedView(id)}
-              className={`flex items-center px-4 py-2 rounded-md font-medium transition-all duration-200 ${
+              className={`flex items-center px-4 py-2 rounded-md font-medium transition-colors ${
                 selectedView === id
-                  ? 'bg-indigo-600 text-white shadow-md transform scale-105'
+                  ? 'bg-indigo-600 text-white'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
               }`}
             >
@@ -162,64 +133,50 @@ function App() {
                 title="Total Outreach Visits"
                 value={totalStats.totalVisits.toLocaleString()}
                 subtitle="Across all locations"
-                color="blue"
-                delay={0}
               />
               <MetricCard
                 icon={Users}
                 title="People Encountered"
                 value={totalStats.totalClients.toLocaleString()}
                 subtitle={`Avg ${totalStats.avgClientsPerVisit} per visit`}
-                color="green"
-                delay={100}
               />
               <MetricCard
                 icon={Activity}
                 title="Successful Engagements"
                 value={totalStats.totalEngaged.toLocaleString()}
                 subtitle={`${totalStats.overallEngagementRate}% engagement rate`}
-                color="purple"
-                delay={200}
               />
               <MetricCard
-                icon={Target}
+                icon={Home}
                 title="Unique Locations"
                 value={totalStats.uniqueLocations.toLocaleString()}
                 subtitle="Citywide coverage"
-                color="orange"
-                delay={300}
               />
             </div>
 
             {/* Summary Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Monthly Activity Trend */}
-              <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 animate-slide-up">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  <TrendingUp className="h-5 w-5 mr-2 text-blue-600" />
-                  Monthly Outreach Activity
-                </h3>
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Monthly Outreach Activity</h3>
                 <ResponsiveContainer width="100%" height={300}>
                   <ComposedChart data={monthlyTrends}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                    <XAxis dataKey="month" stroke="#6b7280" />
-                    <YAxis yAxisId="left" stroke="#6b7280" />
-                    <YAxis yAxisId="right" orientation="right" stroke="#6b7280" />
-                    <Tooltip content={<CustomTooltip />} />
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis yAxisId="left" />
+                    <YAxis yAxisId="right" orientation="right" />
+                    <Tooltip />
                     <Legend />
-                    <Bar yAxisId="left" dataKey="visits" fill="#3B82F6" name="Visits" radius={[2, 2, 0, 0]} />
-                    <Bar yAxisId="left" dataKey="totalClients" fill="#10B981" name="Clients" radius={[2, 2, 0, 0]} />
+                    <Bar yAxisId="left" dataKey="visits" fill="#3B82F6" name="Visits" />
+                    <Bar yAxisId="left" dataKey="totalClients" fill="#10B981" name="Clients" />
                     <Line yAxisId="right" type="monotone" dataKey="engagementRate" stroke="#EF4444" strokeWidth={3} name="Engagement %" />
                   </ComposedChart>
                 </ResponsiveContainer>
               </div>
 
               {/* Engagement Rate Distribution */}
-              <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 animate-slide-up" style={{ animationDelay: '200ms' }}>
-                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                  <Award className="h-5 w-5 mr-2 text-green-600" />
-                  Location Engagement Distribution
-                </h3>
+              <div className="bg-white p-6 rounded-xl shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Location Engagement Distribution</h3>
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie
@@ -229,40 +186,33 @@ function App() {
                       outerRadius={100}
                       fill="#8884d8"
                       dataKey="value"
-                      label={({ name, value }) => `${value} locations`}
+                      label={({ name, value }) => `${name}: ${value}`}
                     >
                       {engagementDistribution.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
                     </Pie>
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend />
+                    <Tooltip />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
             </div>
 
-            {/* Impact Summary */}
-            <div className="bg-white p-6 rounded-xl shadow-lg animate-slide-up" style={{ animationDelay: '400ms' }}>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <Home className="h-5 w-5 mr-2 text-purple-600" />
-                Impact Summary
-              </h3>
+            {/* Quick Stats */}
+            <div className="bg-white p-6 rounded-xl shadow-lg">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Impact Summary</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200">
-                  <div className="text-3xl font-bold text-blue-600">{totalStats.overallEngagementRate}%</div>
-                  <div className="text-gray-700 font-medium">Overall Engagement Rate</div>
-                  <div className="text-sm text-gray-600 mt-1">Exceeds industry standard</div>
+                <div className="text-center p-4 bg-blue-50 rounded-lg">
+                  <div className="text-2xl font-bold text-blue-600">{totalStats.overallEngagementRate}%</div>
+                  <div className="text-gray-600">Overall Engagement Rate</div>
                 </div>
-                <div className="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200">
-                  <div className="text-3xl font-bold text-green-600">{totalStats.avgClientsPerVisit}</div>
-                  <div className="text-gray-700 font-medium">Average Clients per Visit</div>
-                  <div className="text-sm text-gray-600 mt-1">Consistent outreach reach</div>
+                <div className="text-center p-4 bg-green-50 rounded-lg">
+                  <div className="text-2xl font-bold text-green-600">{totalStats.avgClientsPerVisit}</div>
+                  <div className="text-gray-600">Average Clients per Visit</div>
                 </div>
-                <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200">
-                  <div className="text-3xl font-bold text-purple-600">{totalStats.uniqueLocations}</div>
-                  <div className="text-gray-700 font-medium">Unique Locations Served</div>
-                  <div className="text-sm text-gray-600 mt-1">Comprehensive city coverage</div>
+                <div className="text-center p-4 bg-purple-50 rounded-lg">
+                  <div className="text-2xl font-bold text-purple-600">{totalStats.uniqueLocations}</div>
+                  <div className="text-gray-600">Unique Locations Served</div>
                 </div>
               </div>
             </div>
@@ -272,37 +222,32 @@ function App() {
         {/* Locations Tab */}
         {selectedView === 'locations' && (
           <div className="space-y-8">
-            <div className="bg-white p-6 rounded-xl shadow-lg animate-slide-up">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <MapPin className="h-5 w-5 mr-2 text-blue-600" />
-                Top Outreach Locations by Activity
-              </h3>
+            <div className="bg-white p-6 rounded-xl shadow-lg">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Outreach Locations by Activity</h3>
               <ResponsiveContainer width="100%" height={500}>
                 <BarChart data={topLocationsChart} margin={{ top: 20, right: 30, left: 20, bottom: 100 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <CartesianGrid strokeDasharray="3 3" />
                   <XAxis 
                     dataKey="name" 
                     angle={-45}
                     textAnchor="end"
                     height={100}
                     interval={0}
-                    stroke="#6b7280"
                   />
-                  <YAxis stroke="#6b7280" />
-                  <Tooltip content={<CustomTooltip />} />
+                  <YAxis />
+                  <Tooltip />
                   <Legend />
-                  <Bar dataKey="visits" fill="#3B82F6" name="Total Visits" radius={[2, 2, 0, 0]} />
-                  <Bar dataKey="clients" fill="#10B981" name="Total Clients" radius={[2, 2, 0, 0]} />
-                  <Bar dataKey="engaged" fill="#8B5CF6" name="Clients Engaged" radius={[2, 2, 0, 0]} />
+                  <Bar dataKey="visits" fill="#3B82F6" name="Total Visits" />
+                  <Bar dataKey="clients" fill="#10B981" name="Total Clients" />
+                  <Bar dataKey="engaged" fill="#8B5CF6" name="Clients Engaged" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
 
             {/* Location Details Table */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden animate-slide-up" style={{ animationDelay: '200ms' }}>
-              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200">
                 <h3 className="text-lg font-semibold text-gray-900">Location Performance Details</h3>
-                <p className="text-sm text-gray-600 mt-1">Detailed metrics for top performing outreach locations</p>
               </div>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
@@ -317,14 +262,12 @@ function App() {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {topLocations.map((location, index) => (
-                      <tr key={index} className="hover:bg-gray-50 transition-colors duration-200">
+                      <tr key={index} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {location.location}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            {location.visits}
-                          </span>
+                          {location.visits}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {location.totalClients}
@@ -336,7 +279,7 @@ function App() {
                           <div className="flex items-center">
                             <div className="flex-1 bg-gray-200 rounded-full h-2 mr-2 max-w-20">
                               <div
-                                className="bg-indigo-600 h-2 rounded-full transition-all duration-500"
+                                className="bg-indigo-600 h-2 rounded-full"
                                 style={{ width: `${Math.min(location.engagementRate, 100)}%` }}
                               ></div>
                             </div>
@@ -358,31 +301,27 @@ function App() {
         {selectedView === 'trends' && (
           <div className="space-y-8">
             {/* Monthly Trends Chart */}
-            <div className="bg-white p-6 rounded-xl shadow-lg animate-slide-up">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <TrendingUp className="h-5 w-5 mr-2 text-green-600" />
-                Monthly Outreach Trends (Aug - Dec 2024)
-              </h3>
+            <div className="bg-white p-6 rounded-xl shadow-lg">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Monthly Outreach Trends (Aug - Dec 2024)</h3>
               <ResponsiveContainer width="100%" height={400}>
                 <ComposedChart data={monthlyTrends}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                  <XAxis dataKey="month" stroke="#6b7280" />
-                  <YAxis yAxisId="left" stroke="#6b7280" />
-                  <YAxis yAxisId="right" orientation="right" stroke="#6b7280" />
-                  <Tooltip content={<CustomTooltip />} />
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis yAxisId="left" />
+                  <YAxis yAxisId="right" orientation="right" />
+                  <Tooltip />
                   <Legend />
-                  <Bar yAxisId="left" dataKey="visits" fill="#3B82F6" name="Monthly Visits" radius={[2, 2, 0, 0]} />
-                  <Bar yAxisId="left" dataKey="totalClients" fill="#10B981" name="Clients Encountered" radius={[2, 2, 0, 0]} />
+                  <Bar yAxisId="left" dataKey="visits" fill="#3B82F6" name="Monthly Visits" />
+                  <Bar yAxisId="left" dataKey="totalClients" fill="#10B981" name="Clients Encountered" />
                   <Line yAxisId="right" type="monotone" dataKey="engagementRate" stroke="#EF4444" strokeWidth={3} name="Engagement Rate %" />
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
 
             {/* Monthly Breakdown Table */}
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden animate-slide-up" style={{ animationDelay: '200ms' }}>
-              <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200">
                 <h3 className="text-lg font-semibold text-gray-900">Monthly Performance Breakdown</h3>
-                <p className="text-sm text-gray-600 mt-1">Detailed monthly statistics and performance indicators</p>
               </div>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
@@ -398,7 +337,7 @@ function App() {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {monthlyTrends.map((month, index) => (
-                      <tr key={index} className="hover:bg-gray-50 transition-colors duration-200">
+                      <tr key={index} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {month.month}
                         </td>
@@ -421,9 +360,7 @@ function App() {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
-                            {month.shelterRequests}
-                          </span>
+                          {month.shelterRequests}
                         </td>
                       </tr>
                     ))}
@@ -433,43 +370,24 @@ function App() {
             </div>
 
             {/* Insights Box */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200 animate-slide-up" style={{ animationDelay: '400ms' }}>
-              <h3 className="text-lg font-semibold text-blue-900 mb-3 flex items-center">
-                <Award className="h-5 w-5 mr-2" />
-                Key Insights & Recommendations
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                <div className="space-y-3">
-                  <div>
-                    <h4 className="font-medium text-blue-800 flex items-center">
-                      <TrendingUp className="h-4 w-4 mr-1" />
-                      Growth Trends
-                    </h4>
-                    <p className="text-blue-700">December showed the highest activity with 123 visits and 837 clients encountered, indicating increased need during winter months.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-blue-800 flex items-center">
-                      <Target className="h-4 w-4 mr-1" />
-                      Consistency
-                    </h4>
-                    <p className="text-blue-700">Engagement rate remains stable at ~73% across all months, indicating effective and reliable outreach methods.</p>
-                  </div>
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200">
+              <h3 className="text-lg font-semibold text-blue-900 mb-3">Key Insights</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <h4 className="font-medium text-blue-800">Growth Trends</h4>
+                  <p className="text-blue-700">December showed the highest activity with 123 visits and 837 clients encountered.</p>
                 </div>
-                <div className="space-y-3">
-                  <div>
-                    <h4 className="font-medium text-blue-800 flex items-center">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      High-Impact Locations
-                    </h4>
-                    <p className="text-blue-700">Top 10 locations account for 60% of all client encounters. Focus resources on Hubbard & Desplaines and Chicago & Albany for maximum impact.</p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-blue-800 flex items-center">
-                      <Users className="h-4 w-4 mr-1" />
-                      Coverage Excellence
-                    </h4>
-                    <p className="text-blue-700">232 unique locations demonstrate comprehensive citywide outreach, ensuring no vulnerable population is overlooked.</p>
-                  </div>
+                <div>
+                  <h4 className="font-medium text-blue-800">Consistency</h4>
+                  <p className="text-blue-700">Engagement rate remains stable at ~73% across all months, indicating effective outreach methods.</p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-blue-800">High-Impact Locations</h4>
+                  <p className="text-blue-700">Top 10 locations account for 60% of all client encounters.</p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-blue-800">Coverage</h4>
+                  <p className="text-blue-700">232 unique locations demonstrate comprehensive citywide outreach.</p>
                 </div>
               </div>
             </div>
@@ -477,9 +395,8 @@ function App() {
         )}
 
         {/* Footer */}
-        <div className="mt-12 text-center text-gray-500 text-sm animate-fade-in" style={{ animationDelay: '600ms' }}>
+        <div className="mt-12 text-center text-gray-500 text-sm">
           <p>ReVive Impact Dashboard • Data from {totalStats.uniqueLocations} unique locations • Generated {new Date().toLocaleDateString()}</p>
-          <p className="mt-1">Comprehensive analytics for street outreach optimization and impact measurement</p>
         </div>
       </div>
     </div>
